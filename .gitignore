@@ -1,0 +1,2 @@
+.rvmrc
+test/dummy/db/*.db
