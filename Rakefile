@@ -18,16 +18,24 @@ Rake::TestTask.new do |t|
   t.test_files = FileList['test/**/*.rb']
 end
 
-namespace :db do
-  task :environment do
-    require 'active_record'
-    ActiveRecord::Base.establish_connection :adapter => 'sqlite3', :database =>  'test/dummy/db/test.sqlite3.db'
-  end
+namespace :mournful_settings do
+  
+  namespace :db do
+    task :environment do
+      require 'active_record'
+      environment = ENV['RAILS_ENV'] || 'development'
+      ActiveRecord::Base.establish_connection :adapter => 'sqlite3', :database =>  "test/dummy/db/#{environment}.sqlite3.db"
+    end
 
-desc "Migrate the database"
-  task(:migrate => :environment) do
-    ActiveRecord::Base.logger = Logger.new(STDOUT)
-    ActiveRecord::Migration.verbose = true
-    ActiveRecord::Migrator.migrate("db/migrate")
+    desc "Migrate the database"
+    task(:migrate => :environment) do
+      ActiveRecord::Migrator.migrate("db/migrate", ENV["VERSION"] ? ENV["VERSION"].to_i : nil)
+    end
+
+    desc "Roll back the database"
+    task(:rollback => :environment) do
+      ActiveRecord::Migrator.rollback("db/migrate")
+    end
   end
+  
 end

@@ -1,5 +1,4 @@
 class CreateSettings < ActiveRecord::Migration
-  raise 'h'
   def change
     create_table :mournful_settings_settings do |t|
       t.string :name
