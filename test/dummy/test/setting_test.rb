@@ -1,12 +1,14 @@
-$:.unshift File.join(File.dirname(__FILE__),'..','lib')
-
-require 'test/unit'
-require 'setting'
+require_relative '../../test_helper'
 
 class SettingTest < Test::Unit::TestCase
-  def test_foo
-    #TODO: Write test
-    flunk "TODO: Write test"
-    # assert_equal("foo", bar)
+  
+  def setup
+    @setting = Setting.create(:name => 'test', :value => 'foo', :value_type => 'text')
   end
+  
+  def test_inheritence
+    assert_kind_of(MournfulSettings::Setting, @setting)   
+  end
+  
+  
 end
