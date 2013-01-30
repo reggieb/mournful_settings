@@ -11,7 +11,7 @@ mournful_settings migrations to the host app run this rake task:
 
     rake mournful_settings:install:migrations
 
-Then run 'rake db:migrate' to create 'mournful_settings_settings'
+Then run 'rake db:migrate' to create the 'mournful_settings_settings' table
 
 == Usage
 
@@ -22,13 +22,21 @@ settings, and have it inherit from MournfulSettings::Setting. For example
     class Setting < MournfulSettings::Setting 
     end
 
+=== Fields
 Each setting has four fields:
 
 [name] Identifies the setting. Used in 'for' (see below)
+
 [value] The value being stored.
-[value_type] Values are stored as strings. value_type defines how that string should be presented. For example, '1.23' with value_type 'number' will be presented as numeric 1.23.
+
+[value_type] Values are stored as strings. value_type defines how that string 
+should be presented. For example, '1.23' with value_type 'number' will be 
+presented as numeric 1.23.
+
 [description] Information about the setting being stored
 
+=== Retrieving a setting
+ 
 To use a stored setting, use the 'for' class method:
 
     Setting.create(:name => 'pi', :value => '3.14159', :value_type => 'number')
