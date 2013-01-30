@@ -24,7 +24,7 @@ settings, and have it inherit from MournfulSettings::Setting. For example
     end
 
 === Fields
-Each setting has four fields:
+Each setting has five fields:
 
 [name]         Identifies the setting. Used in 'for' (see below)
 
@@ -32,12 +32,13 @@ Each setting has four fields:
 
 [value_type]   Values are stored as strings. value_type defines how that string 
                should be presented. For example, '1.23' with value_type 'number' 
-               will be presented as numeric 1.23.
+               will be presented as numeric 1.23. If the value_type was 'text'
+               the value returned would be '1.23'.
 
 [description]  Information about the setting being stored
 
-[encrypted]    Boolean: If set to true value will be stored in an encrypted format.
-               Otherwise the setting will be stored as plain text.
+[encrypted]    Boolean: If set to true, the value will be stored in an encrypted 
+               format. Otherwise the value will be stored as plain text.
 
 === Retrieving a setting
  
@@ -54,7 +55,7 @@ its own key string.
 
 === Set key
 
-If you wish to use your own encryption key, you can define the key used in
+If you wish to use your own encryption key, you can define the key in
 an initializer, like this:
 
     Setting::Cipher.key = 'your key'
