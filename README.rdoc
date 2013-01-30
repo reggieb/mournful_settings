@@ -37,8 +37,7 @@ Each setting has four fields:
 [description]  Information about the setting being stored
 
 [encrypted]    Boolean: If set to true value will be stored in an encrypted format.
-               Otherwise the setting will be stored as plain text. Note that
-               encryption is fairly basic.
+               Otherwise the setting will be stored as plain text.
 
 === Retrieving a setting
  
@@ -48,3 +47,27 @@ To use a stored setting, use the 'for' class method:
 
     Setting.for(:pi)    -->   3.14159
 
+== Encryption
+
+By default mournful settings uses a blowfish cipher to encrypt settings, and
+its own key string.
+
+=== Set key
+
+If you wish to use your own encryption key, you can define the key used in
+an initializer, like this:
+
+    Setting::Cipher.key = 'your key'
+
+=== Change cipher
+
+Mournful settings uses Ruby's OpenSSL::Cipher. If you wish to use to change
+the cipher from blowfish, you can alter it like this:
+
+    Setting::Cipher.config = 'aes-128-cbc'
+
+To see a list of the available options use:
+
+    puts OpenSSL::Cipher.ciphers
+
+See: http://ruby-doc.org/stdlib-1.9.3/libdoc/openssl/rdoc/OpenSSL/Cipher.html

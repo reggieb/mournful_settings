@@ -4,6 +4,8 @@ class SettingTest < Test::Unit::TestCase
   
   def setup
     @value = 'A secret'
+    Setting::Cipher.config = 'aes-128-cbc'
+    Setting::Cipher.key = 'something else'
   end
   
   def teardown
@@ -69,6 +71,12 @@ class SettingTest < Test::Unit::TestCase
 
   def test_for_when_no_matching_setting
     assert_nil(Setting.for(:nothing), "Should return nil when setting doesn't exist")
+  end
+  
+  def test_setting_an_invalid_cipher_config
+    assert_raises RuntimeError do
+      Setting::Cipher.config = 'invalid'
+    end
   end
   
   private
