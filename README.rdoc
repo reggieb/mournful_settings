@@ -30,8 +30,8 @@ Each setting has four fields:
 [value] The value being stored.
 
 [value_type] Values are stored as strings. value_type defines how that string 
-should be presented. For example, '1.23' with value_type 'number' will be 
-presented as numeric 1.23.
+             should be presented. For example, '1.23' with value_type 'number' will be 
+             presented as numeric 1.23.
 
 [description] Information about the setting being stored
 
