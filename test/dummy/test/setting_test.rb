@@ -25,6 +25,16 @@ class SettingTest < Test::Unit::TestCase
   def test_decimal_value
     assert_kind_of(BigDecimal, decimal_setting.value)
   end
+  
+  def test_encrypt_value
+    assert_kind_of(String, encrypt_setting.value)
+    assert_equal(@value, encrypt_setting.value)
+  end
+  
+  def test_encrypt_value_is_encrypted_in_database
+    database_value = database_value_for(encrypt_setting)
+    assert_not_equal(database_value, encrypt_setting.value)
+  end
 
   def test_valid_types
     Setting::VALUE_TYPES.each do |valid_type|
@@ -39,7 +49,7 @@ class SettingTest < Test::Unit::TestCase
   end
 
   def test_for
-    [number_setting, text_setting, decimal_setting].each do |setting|
+    [number_setting, text_setting, decimal_setting, encrypt_setting].each do |setting|
       assert_equal(setting.value, Setting.for(setting.name.to_sym))
     end
   end
@@ -59,6 +69,16 @@ class SettingTest < Test::Unit::TestCase
   
   def decimal_setting
     @decimal_setting ||= Setting.create(:name => 'decimal_setting', :value => '4.55', :value_type => 'decimal')    
+  end
+  
+  def encrypt_setting
+    @value ||= 'A secret'
+    @encrypt_setting ||= Setting.create(:name => 'encrypt_setting', :value => @value, :value_type => 'encrypt')
+  end
+  
+  def database_value_for(setting)
+    sql = "SELECT value FROM mournful_settings_settings WHERE id = #{setting.id}"
+    Setting.connection.select_value(sql)
   end
   
   
