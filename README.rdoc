@@ -1,6 +1,7 @@
-= mournful_settings
+= Mournful Settings
 
-Adds a settings class to a rails app.
+Adds a settings class to a rails app. The settings are mournful because
+they can be stored encrypted. Aren't puns wonderful.
 
 == Installation
 
@@ -25,15 +26,19 @@ settings, and have it inherit from MournfulSettings::Setting. For example
 === Fields
 Each setting has four fields:
 
-[name] Identifies the setting. Used in 'for' (see below)
+[name]         Identifies the setting. Used in 'for' (see below)
 
-[value] The value being stored.
+[value]        The value being stored.
 
-[value_type] Values are stored as strings. value_type defines how that string 
-             should be presented. For example, '1.23' with value_type 'number' will be 
-             presented as numeric 1.23.
+[value_type]   Values are stored as strings. value_type defines how that string 
+               should be presented. For example, '1.23' with value_type 'number' 
+               will be presented as numeric 1.23.
 
-[description] Information about the setting being stored
+[description]  Information about the setting being stored
+
+[encrypted]    Boolean: If set to true value will be stored in an encrypted format.
+               Otherwise the setting will be stored as plain text. Note that
+               encryption is fairly basic.
 
 === Retrieving a setting
  
@@ -42,3 +47,4 @@ To use a stored setting, use the 'for' class method:
     Setting.create(:name => 'pi', :value => '3.14159', :value_type => 'number')
 
     Setting.for(:pi)    -->   3.14159
+

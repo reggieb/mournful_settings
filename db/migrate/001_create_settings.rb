@@ -5,6 +5,7 @@ class CreateSettings < ActiveRecord::Migration
       t.string :value_type
       t.string :value
       t.string :description
+      t.boolean :encrypted
       t.timestamps
     end
   end

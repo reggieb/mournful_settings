@@ -4,11 +4,9 @@ module MournfulSettings
     
     self.table_name = 'mournful_settings_settings'
        
-    ENCRYPTION_TYPE = 'encrypt'
-    VALUE_TYPES = ['text', 'number', 'decimal', ENCRYPTION_TYPE]
+    VALUE_TYPES = ['text', 'number', 'decimal']
     
     before_save :encrypt_text
-
 
     validates :value_type, :presence => true, :inclusion => {:in => VALUE_TYPES}
     validates :value, :presence => true
@@ -24,23 +22,23 @@ module MournfulSettings
     end
 
     def value
-      if value_type.present?
+      if value_type.present? 
+        parent_value = encrypted? ? decrypt(super) : super
+        
         case value_type.to_s
           when 'number'
-            super.to_f
+            parent_value.to_f
           when 'decimal'
-            BigDecimal.new(super.to_s)
-          when ENCRYPTION_TYPE
-            decrypt super
+            BigDecimal.new(parent_value.to_s)
           else
-            super
+            parent_value
         end
       end
     end
     
     private
     def encrypt(text)
-      Base64.encode64 text
+      Base64.encode64 text.to_s
     end
     
     def decrypt(text)
@@ -52,6 +50,7 @@ module MournfulSettings
     end
     
     def is_encrypted?(text)
+      return false unless text.kind_of? String
       letters_and_number_with_equal_sign_packing = /^\w+=*/
       last_bit = text.getbyte(-1)
       line_feed = 10
@@ -60,7 +59,7 @@ module MournfulSettings
     end
     
     def encrypt_text    
-      self.value = encrypt(self.value) if self.value_type == ENCRYPTION_TYPE
+      self.value = encrypt(self.value) if encrypted?
     end
     
   end

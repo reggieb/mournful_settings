@@ -3,7 +3,7 @@ require_relative '../../test_helper'
 class SettingTest < Test::Unit::TestCase
   
   def setup
-      
+    @value = 'A secret'
   end
   
   def teardown
@@ -26,14 +26,27 @@ class SettingTest < Test::Unit::TestCase
     assert_kind_of(BigDecimal, decimal_setting.value)
   end
   
-  def test_encrypt_value
-    assert_kind_of(String, encrypt_setting.value)
-    assert_equal(@value, encrypt_setting.value)
+  def test_encrypted_value
+    assert_kind_of(String, encrypted_setting.value)
+    assert_equal(@value, encrypted_setting.value)
   end
   
-  def test_encrypt_value_is_encrypted_in_database
-    database_value = database_value_for(encrypt_setting)
-    assert_not_equal(database_value, encrypt_setting.value)
+  def test_encrypted_value_is_encrypted_in_database
+    database_value = database_value_for(encrypted_setting)
+    assert_not_equal(database_value, encrypted_setting.value)
+  end
+  
+  def test_encrypted_with_different_value_types
+    {
+      'text' => 'this is a load of text',
+      'number' => 1.33333333,
+      'decimal' => 1.44
+    }.each do |value_type, value|
+      setting = Setting.create(:name => value_type, :value => value, :value_type => value_type, :encrypted => true)
+      assert_equal(value, setting.value)
+      assert_not_equal(database_value_for(setting), setting.value)
+      assert_not_equal(database_value_for(setting).to_s, setting.value.to_s)
+    end
   end
 
   def test_valid_types
@@ -49,7 +62,7 @@ class SettingTest < Test::Unit::TestCase
   end
 
   def test_for
-    [number_setting, text_setting, decimal_setting, encrypt_setting].each do |setting|
+    [number_setting, text_setting, decimal_setting, encrypted_setting].each do |setting|
       assert_equal(setting.value, Setting.for(setting.name.to_sym))
     end
   end
@@ -71,9 +84,8 @@ class SettingTest < Test::Unit::TestCase
     @decimal_setting ||= Setting.create(:name => 'decimal_setting', :value => '4.55', :value_type => 'decimal')    
   end
   
-  def encrypt_setting
-    @value ||= 'A secret'
-    @encrypt_setting ||= Setting.create(:name => 'encrypt_setting', :value => @value, :value_type => 'encrypt')
+  def encrypted_setting
+    @encrypted_setting ||= Setting.create(:name => 'encrypted_setting', :value => @value, :value_type => 'text', :encrypted => true)
   end
   
   def database_value_for(setting)
