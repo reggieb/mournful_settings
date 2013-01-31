@@ -50,6 +50,19 @@ class SettingTest < Test::Unit::TestCase
       assert_not_equal(database_value_for(setting).to_s, setting.value.to_s)
     end
   end
+  
+  def test_encrypting_an_existing_setting
+    value = number_setting.value
+    number_setting.encrypted = true
+    assert number_setting.save, "Should be able to save a setting after changing it to encrypted"
+    assert_equal(value, number_setting.value)
+  end
+  
+  def test_unencrypting_an_encrypted_setting
+    encrypted_setting.encrypted = false
+    assert encrypted_setting.save, "Should be able to save a setting after changing it to unencrypted"
+    assert_equal(@value, encrypted_setting.value)
+  end
 
   def test_valid_types
     Setting::VALUE_TYPES.each do |valid_type|
