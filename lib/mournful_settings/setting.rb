@@ -57,8 +57,8 @@ module MournfulSettings
     def inside_separators_and_is_base64_encoded?(text)
       return unless text.kind_of? String
       bytes = text.bytes.to_a
-      return unless bytes[0] == ascii_unit_separator_byte
-      return unless bytes[-1] == ascii_unit_separator_byte
+      return unless bytes[0] == separator_byte
+      return unless bytes[-1] == separator_byte
       return unless bytes[-2] == last_byte_of_base_64_encoded_text
       non_white_space_with_equal_sign_packing =~ text[1..-3]
     end
@@ -86,11 +86,12 @@ module MournfulSettings
    
     # Used to delimit encrypted values to make identification more reliable
     def separator
-      ascii_unit_separator_byte.chr 
+      separator_byte.chr 
     end
     
-    def ascii_unit_separator_byte
-      31
+    
+    def separator_byte
+      31 # ASCII unit separator
     end
     
     def last_byte_of_base_64_encoded_text
