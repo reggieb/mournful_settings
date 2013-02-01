@@ -55,20 +55,18 @@ module MournfulSettings
     end
 
     def inside_separators_and_is_base64_encoded?(text)
-      return false unless text.kind_of? String
-      elements = {
-        :starts_with_separator => "^#{separator}",
-        :non_white_space_with_equal_sign_packing => '\S+=*',
-        :base64_end => "\n",
-        :ends_with_separator => "#{separator}$"
-      }
-      pattern = elements.values.join
-      /#{pattern}/ =~ text      
+      return unless text.kind_of? String
+      bytes = text.bytes.to_a
+      return unless bytes[0] == ascii_unit_separator_byte
+      return unless bytes[-1] == ascii_unit_separator_byte
+      return unless bytes[-2] == last_byte_of_base_64_encoded_text
+      non_white_space_with_equal_sign_packing =~ text[1..-3]
     end
     
-    def is_separator_delimited(text)
-      
+    def non_white_space_with_equal_sign_packing 
+      /\S+=*/
     end
+
     
     def encrypt_text  
       if encrypted?
@@ -85,9 +83,22 @@ module MournfulSettings
     def remove_separators(text)
       text.gsub(separator, "")
     end
-    
+   
+    # Used to delimit encrypted values to make identification more reliable
     def separator
-      31.chr # ASCII unit separator
+      ascii_unit_separator_byte.chr 
+    end
+    
+    def ascii_unit_separator_byte
+      31
+    end
+    
+    def last_byte_of_base_64_encoded_text
+      line_feed_byte
+    end
+    
+    def line_feed_byte
+      10
     end
     
   end
