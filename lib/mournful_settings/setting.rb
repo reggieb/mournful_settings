@@ -7,7 +7,7 @@ module MournfulSettings
        
     VALUE_TYPES = ['text', 'number', 'decimal']
     
-    before_save :encrypt_text
+    before_save :encrypt_value
 
     validates :value_type, :presence => true, :inclusion => {:in => VALUE_TYPES}
     validates :value, :presence => true
@@ -68,7 +68,7 @@ module MournfulSettings
     end
 
     
-    def encrypt_text  
+    def encrypt_value  
       if encrypted?
         self.value = encrypt(self.value)
       else
