@@ -38,14 +38,14 @@ module MournfulSettings
       end
     end
     
-    private
     def self.recrypt_all &do_while_unencrypted
       encrypted = where(:encrypted => true)
       encrypted.each {|s| s.encrypted = false; s.save}
-      do_while_unencrypted.call
+      do_while_unencrypted.call if do_while_unencrypted
       encrypted.each {|s| s.encrypted = true; s.save}
     end
-    
+        
+    private
     def encrypt(text)
       add_separators Base64.encode64 Cipher.encrypt text.to_s
     end

@@ -62,28 +62,58 @@ setting, by setting :encrypted => false.
 
 Out of the box, encryption uses a blowfish cipher, and a generic key string.
 
-=== Set key
+=== Set key and cipher
 
-If you wish to use your own encryption key, you can define the key in
-an initializer, like this:
+If you wish to use your own encryption key, you can define the key like this:
 
-    Setting::Cipher.key = 'your key'
-
-=== Change cipher
+    MournfulSettings::Setting::Cipher.key = 'your key'
 
 Mournful settings uses Ruby's OpenSSL::Cipher. If you wish to change
 the cipher from blowfish, you can alter it like this:
 
-    Setting::Cipher.config = 'aes-128-cbc'
-
-Note that existing encrypted settings will be decrypted with the previous cipher
-and then encrypted with the new cipher when this setting is changed. 
+    MournfulSettings::Setting::Cipher.config = 'aes-128-cbc'
 
 To see a list of the available options use:
 
     puts OpenSSL::Cipher.ciphers
 
 See: http://ruby-doc.org/stdlib-1.9.3/libdoc/openssl/rdoc/OpenSSL/Cipher.html
+
+=== Where to set the cipher within your app
+
+If you use a setting in an initializer you need to ensure that your cipher
+configuration is set before the setting is used. This means you either need
+to order your initializers or define the cipher settings in a before_initialize
+block defined in config/application:
+
+    module YourRailsApp
+      class Application < Rails::Application
+
+        .....
+
+        config.before_initialize do
+          MournfulSettings::Setting::Cipher.key = 'your key'
+        end
+      end
+    end
+
+See: http://guides.rubyonrails.org/configuring.html#initialization-events
+
+=== Changing key and/or cipher
+
+If you change the cipher configuration, existing encrypted settings will break.
+Therefore, to make the change after you have started using encrypted settings,
+you must decrypt your settings, make the change and then re-encrypt the settings 
+again. To ease this task, use the Setting.recrypt_all method:
+
+    Setting.recrypt_all { Setting::Cipher.key = 'your key' }
+
+So the process would be:
+
+- Stop the server
+- Run the recrypt task
+- Add the configuration code to the app
+- Start the server
 
 == Integration with ActiveAdmin
 

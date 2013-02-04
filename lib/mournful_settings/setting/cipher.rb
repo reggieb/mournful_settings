@@ -18,10 +18,7 @@ module MournfulSettings
       end
       
       def self.key=(text)
-        return if text == key
-        Setting.recrypt_all do
-          @key = text
-        end
+        @key = text
       end
       
       def self.key
@@ -30,10 +27,7 @@ module MournfulSettings
       
       def self.config=(text)
         raise "'#{text}' is not a value cipher" unless OpenSSL::Cipher::Cipher.ciphers.include?(text)
-        return if text == config
-        Setting.recrypt_all do
-          @config = text 
-        end
+        @config = text 
       end
       
       def self.config

@@ -98,7 +98,9 @@ class SettingTest < Test::Unit::TestCase
     test_encrypted_value
     Setting::Cipher.config = cipher
     assert_equal(cipher, Setting::Cipher.config)
-    test_encrypted_value
+    assert_raise OpenSSL::Cipher::CipherError do
+      test_encrypted_value
+    end
   end
   
   def test_changing_key
@@ -106,6 +108,17 @@ class SettingTest < Test::Unit::TestCase
     assert_not_equal(key, Setting::Cipher.key)
     test_encrypted_value
     Setting::Cipher.key = key
+    assert_equal(key, Setting::Cipher.key)
+    assert_raise OpenSSL::Cipher::CipherError do
+      test_encrypted_value
+    end
+  end
+  
+  def test_recrypt_all
+    key = 'Some new key'
+    assert_not_equal(key, Setting::Cipher.key)
+    test_encrypted_value
+    Setting.recrypt_all { Setting::Cipher.key = key }
     assert_equal(key, Setting::Cipher.key)
     test_encrypted_value
   end
