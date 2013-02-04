@@ -1,9 +1,13 @@
 module MournfulSettings
-  VERSION = "0.0.3"
+  VERSION = "0.0.4"
 end
 
 # History
 # =======
+# 
+# 0.0.4: Changing cipher configuration
+# ------------------------------------
+# Adds facility to allow cipher to be changed with existing live data
 # 
 # 0.0.3: Encrypted by default
 # ---------------------------
