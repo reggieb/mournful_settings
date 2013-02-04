@@ -83,8 +83,9 @@ See: http://ruby-doc.org/stdlib-1.9.3/libdoc/openssl/rdoc/OpenSSL/Cipher.html
 
 If you use a setting in an initializer you need to ensure that your cipher
 configuration is set before the setting is used. This means you either need
-to order your initializers or define the cipher settings in a before_initialize
-block defined in config/application:
+to order your initializers putting your mournful_settings initializer first or 
+define the cipher settings in a before_initialize block defined in 
+config/application:
 
     module YourRailsApp
       class Application < Rails::Application
@@ -112,7 +113,7 @@ So the process would be:
 
 - Stop the server
 - Run the recrypt task
-- Add the configuration code to the app
+- Add/Update the configuration code in the app
 - Start the server
 
 == Integration with ActiveAdmin
