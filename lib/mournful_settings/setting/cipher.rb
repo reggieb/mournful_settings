@@ -18,7 +18,10 @@ module MournfulSettings
       end
       
       def self.key=(text)
-        @key = text
+        return if text == key
+        Setting.recrypt_all do
+          @key = text
+        end
       end
       
       def self.key

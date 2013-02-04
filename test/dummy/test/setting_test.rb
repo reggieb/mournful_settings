@@ -101,6 +101,14 @@ class SettingTest < Test::Unit::TestCase
     test_encrypted_value
   end
   
+  def test_changing_key
+    key = 'Some new key'
+    assert_not_equal(key, Setting::Cipher.key)
+    test_encrypted_value
+    Setting::Cipher.key = key
+    assert_equal(key, Setting::Cipher.key)
+    test_encrypted_value
+  end
   
   private
   def text_setting 
