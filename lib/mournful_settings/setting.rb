@@ -7,6 +7,7 @@ module MournfulSettings
        
     VALUE_TYPES = ['text', 'number', 'decimal']
     
+    before_save :set_encrypted_true_unless_false
     before_save :encrypt_value
 
     validates :value_type, :presence => true, :inclusion => {:in => VALUE_TYPES}
@@ -65,6 +66,10 @@ module MournfulSettings
     
     def non_white_space_with_equal_sign_packing 
       /\S+=*/
+    end
+    
+    def set_encrypted_true_unless_false
+      self.encrypted = true unless self.encrypted == false
     end
 
     

@@ -44,7 +44,7 @@ class SettingTest < Test::Unit::TestCase
       'number' => 1.33333333,
       'decimal' => 1.44
     }.each do |value_type, value|
-      setting = Setting.create(:name => value_type, :value => value, :value_type => value_type, :encrypted => true)
+      setting = Setting.create(:name => value_type, :value => value, :value_type => value_type)
       assert_equal(value, setting.value)
       assert_not_equal(database_value_for(setting), setting.value)
       assert_not_equal(database_value_for(setting).to_s, setting.value.to_s)
@@ -94,19 +94,19 @@ class SettingTest < Test::Unit::TestCase
   
   private
   def text_setting 
-    @text_setting ||= Setting.create(:name => 'text_setting', :value => 'foo', :value_type => 'text')
+    @text_setting ||= Setting.create(:name => 'text_setting', :value => 'foo', :value_type => 'text', :encrypted => false)
   end
   
   def number_setting
-    @number_setting ||= Setting.create(:name => 'number_setting', :value => '1.33333333333333', :value_type => 'number')    
+    @number_setting ||= Setting.create(:name => 'number_setting', :value => '1.33333333333333', :value_type => 'number', :encrypted => false)    
   end
   
   def decimal_setting
-    @decimal_setting ||= Setting.create(:name => 'decimal_setting', :value => '4.55', :value_type => 'decimal')    
+    @decimal_setting ||= Setting.create(:name => 'decimal_setting', :value => '4.55', :value_type => 'decimal', :encrypted => false)    
   end
   
   def encrypted_setting
-    @encrypted_setting ||= Setting.create(:name => 'encrypted_setting', :value => @value, :value_type => 'text', :encrypted => true)
+    @encrypted_setting ||= Setting.create(:name => 'encrypted_setting', :value => @value, :value_type => 'text')
   end
   
   def database_value_for(setting)

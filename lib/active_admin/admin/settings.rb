@@ -16,7 +16,12 @@ ActiveAdmin.register Setting do
       f.input :name
       f.input :description
       f.input :value, :input_html => {:value => setting.value}
-      f.input :encrypted
+      f.input(
+        :encrypted, 
+        :input_html => {
+          :checked => (setting.encrypted == false ? false : true)
+        }
+      )
     end
     f.buttons
   end

@@ -50,8 +50,17 @@ To use a stored setting, use the 'for' class method:
 
 == Encryption
 
-By default mournful settings uses a blowfish cipher to encrypt settings, and
-its own key string.
+By default mournful settings are encrypted. You can choose not to encrypt a
+setting, by setting :encrypted => false. 
+
+    Setting.create(
+      :name => 'pi', 
+      :value => '3.14159', 
+      :value_type => 'number',
+      :encrypted => false
+    )
+
+Out of the box, encryption uses a blowfish cipher, and a generic key string.
 
 === Set key
 

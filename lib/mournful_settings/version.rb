@@ -1,9 +1,15 @@
 module MournfulSettings
-  VERSION = "0.0.2"
+  VERSION = "0.0.3"
 end
 
 # History
 # =======
+# 
+# 0.0.3: Encrypted by default
+# ---------------------------
+# Modifies model and active admin registration file to make encrypting settings
+# the default behaviour.
+# 
 # 
 # 0.0.2: Add active admin option
 # ------------------------------
