@@ -29,7 +29,7 @@ class SettingTest < Test::Unit::TestCase
   end
   
   def test_encrypted_value
-    assert_kind_of(String, encrypted_setting.value)
+    assert_kind_of(String, encrypted_setting.reload.value)
     assert_equal(@value, encrypted_setting.value)
   end
   
@@ -91,6 +91,16 @@ class SettingTest < Test::Unit::TestCase
       Setting::Cipher.config = 'invalid'
     end
   end
+  
+  def test_changing_cipher
+    cipher = 'bf-cbc'
+    assert_not_equal(cipher, Setting::Cipher.config)
+    test_encrypted_value
+    Setting::Cipher.config = cipher
+    assert_equal(cipher, Setting::Cipher.config)
+    test_encrypted_value
+  end
+  
   
   private
   def text_setting 

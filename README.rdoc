@@ -76,9 +76,8 @@ the cipher from blowfish, you can alter it like this:
 
     Setting::Cipher.config = 'aes-128-cbc'
 
-Note that existing encrypted settings will break if the cipher is changed.
-Decrypt existing settings (save with :encrypted => false), change the cipher,
-and then re-encrypt the settings (save with :encrypted => true). 
+Note that existing encrypted settings will be decrypted with the previous cipher
+and then encrypted with the new cipher when this setting is changed. 
 
 To see a list of the available options use:
 
