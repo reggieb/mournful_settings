@@ -71,10 +71,14 @@ an initializer, like this:
 
 === Change cipher
 
-Mournful settings uses Ruby's OpenSSL::Cipher. If you wish to use to change
+Mournful settings uses Ruby's OpenSSL::Cipher. If you wish to change
 the cipher from blowfish, you can alter it like this:
 
     Setting::Cipher.config = 'aes-128-cbc'
+
+Note that existing encrypted settings will break if the cipher is changed.
+Decrypt existing settings (save with :encrypted => false), change the cipher,
+and then re-encrypt the settings (save with :encrypted => true). 
 
 To see a list of the available options use:
 
