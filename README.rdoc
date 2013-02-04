@@ -72,3 +72,19 @@ To see a list of the available options use:
     puts OpenSSL::Cipher.ciphers
 
 See: http://ruby-doc.org/stdlib-1.9.3/libdoc/openssl/rdoc/OpenSSL/Cipher.html
+
+== Integration with ActiveAdmin
+
+Mournful settings contains a ActiveAdmin register file, that allow settings to 
+be managed from within the parent app's active_admin space. Of course
+ActiveAdmin needs to be installed and working in the parent rails application,
+for this to work.
+
+To use the Mournful settings' ActiveAdmin register files, add this to the 
+active_admin initializer in your application.
+
+    config.load_paths << MournfulSettings.active_admin_load_path
+
+Alternatively, copy lib/active_admin/admin/setting.rb to you app/admin within
+the host rails app, and modify it as you desire.
+
