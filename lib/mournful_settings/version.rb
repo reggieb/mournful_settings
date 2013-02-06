@@ -1,13 +1,19 @@
 module MournfulSettings
-  VERSION = "0.0.4"
+  VERSION = "0.0.5"
 end
 
 # History
 # =======
 # 
+# 0.0.5: Corrects gem description
+# -------------------------------
+# No functional change.
+# 
+# 
 # 0.0.4: Changing cipher configuration
 # ------------------------------------
 # Adds facility to allow cipher to be changed with existing live data
+# 
 # 
 # 0.0.3: Encrypted by default
 # ---------------------------
@@ -18,6 +24,7 @@ end
 # 0.0.2: Add active admin option
 # ------------------------------
 # Adds active admin integration options.
+# 
 # 
 # 0.0.1: First release
 # --------------------
