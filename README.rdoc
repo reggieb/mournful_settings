@@ -60,8 +60,6 @@ defined, you can add a default to the for declaration.
 
 This will return 3.14 until a 'pi' setting has been created.
 
-The 
-
 == Encryption
 
 By default mournful settings are encrypted. You can choose not to encrypt a
