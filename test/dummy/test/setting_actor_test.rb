@@ -1,20 +1,20 @@
 require_relative '../../test_helper'
-require 'setting'
+require 'setting_actor'
 
-class SettingTest < Test::Unit::TestCase
+class SettingActorTest < Test::Unit::TestCase
   
   def setup
     @value = 'A secret'
-    Setting::Cipher.config = 'aes-128-cbc'
-    Setting::Cipher.key = 'something else'
+    SettingActor::Cipher.config = 'aes-128-cbc'
+    SettingActor::Cipher.key = 'something else'
   end
   
   def teardown
-    Setting.delete_all
+    SettingActor.delete_all
   end
   
   def test_inheritence
-    assert_kind_of(MournfulSettings::Setting, text_setting)   
+    assert_not_kind_of(MournfulSettings::Setting, text_setting)   
   end
   
   def test_number_value
@@ -45,7 +45,7 @@ class SettingTest < Test::Unit::TestCase
       'number' => 1.33333333,
       'decimal' => 1.44
     }.each do |value_type, value|
-      setting = Setting.create(:name => value_type, :value => value, :value_type => value_type)
+      setting = SettingActor.create(:name => value_type, :value => value, :value_type => value_type)
       assert_equal(value, setting.value)
       assert_not_equal(database_value_for(setting), setting.value)
       assert_not_equal(database_value_for(setting).to_s, setting.value.to_s)
@@ -66,7 +66,7 @@ class SettingTest < Test::Unit::TestCase
   end
 
   def test_valid_types
-    Setting::VALUE_TYPES.each do |valid_type|
+    SettingActor::VALUE_TYPES.each do |valid_type|
       number_setting.value_type = valid_type
       assert(number_setting.valid?, "number_setting should be valid when value_type = #{valid_type}")
     end
@@ -79,31 +79,31 @@ class SettingTest < Test::Unit::TestCase
 
   def test_for
     [number_setting, text_setting, decimal_setting, encrypted_setting].each do |setting|
-      assert_equal(setting.value, Setting.for(setting.name.to_sym))
+      assert_equal(setting.value, SettingActor.for(setting.name.to_sym))
     end
   end
 
   def test_for_when_no_matching_setting
-    assert_nil(Setting.for(:nothing), "Should return nil when setting doesn't exist")
+    assert_nil(SettingActor.for(:nothing), "Should return nil when setting doesn't exist")
   end
   
   def test_for_with_default_provided
     default = 'Something else'
-    assert_equal(default, Setting.for(:nothing, default))
+    assert_equal(default, SettingActor.for(:nothing, default))
   end
   
   def test_setting_an_invalid_cipher_config
     assert_raises RuntimeError do
-      Setting::Cipher.config = 'invalid'
+      SettingActor::Cipher.config = 'invalid'
     end
   end
   
   def test_changing_cipher
     cipher = 'bf-cbc'
-    assert_not_equal(cipher, Setting::Cipher.config)
+    assert_not_equal(cipher, SettingActor::Cipher.config)
     test_encrypted_value
-    Setting::Cipher.config = cipher
-    assert_equal(cipher, Setting::Cipher.config)
+    SettingActor::Cipher.config = cipher
+    assert_equal(cipher, SettingActor::Cipher.config)
     assert_raise OpenSSL::Cipher::CipherError do
       test_encrypted_value
     end
@@ -111,10 +111,10 @@ class SettingTest < Test::Unit::TestCase
   
   def test_changing_key
     key = 'Some new key'
-    assert_not_equal(key, Setting::Cipher.key)
+    assert_not_equal(key, SettingActor::Cipher.key)
     test_encrypted_value
-    Setting::Cipher.key = key
-    assert_equal(key, Setting::Cipher.key)
+    SettingActor::Cipher.key = key
+    assert_equal(key, SettingActor::Cipher.key)
     assert_raise OpenSSL::Cipher::CipherError do
       test_encrypted_value
     end
@@ -122,33 +122,33 @@ class SettingTest < Test::Unit::TestCase
   
   def test_recrypt_all
     key = 'Some new key'
-    assert_not_equal(key, Setting::Cipher.key)
+    assert_not_equal(key, SettingActor::Cipher.key)
     test_encrypted_value
-    Setting.recrypt_all { Setting::Cipher.key = key }
-    assert_equal(key, Setting::Cipher.key)
+    SettingActor.recrypt_all { SettingActor::Cipher.key = key }
+    assert_equal(key, SettingActor::Cipher.key)
     test_encrypted_value
   end
  
   private
   def text_setting 
-    @text_setting ||= Setting.create(:name => 'text_setting', :value => 'foo', :value_type => 'text', :encrypted => false)
+    @text_setting ||= SettingActor.create(:name => 'text_setting', :value => 'foo', :value_type => 'text', :encrypted => false)
   end
   
   def number_setting
-    @number_setting ||= Setting.create(:name => 'number_setting', :value => '1.33333333333333', :value_type => 'number', :encrypted => false)    
+    @number_setting ||= SettingActor.create(:name => 'number_setting', :value => '1.33333333333333', :value_type => 'number', :encrypted => false)    
   end
   
   def decimal_setting
-    @decimal_setting ||= Setting.create(:name => 'decimal_setting', :value => '4.55', :value_type => 'decimal', :encrypted => false)    
+    @decimal_setting ||= SettingActor.create(:name => 'decimal_setting', :value => '4.55', :value_type => 'decimal', :encrypted => false)    
   end
   
   def encrypted_setting
-    @encrypted_setting ||= Setting.create(:name => 'encrypted_setting', :value => @value, :value_type => 'text')
+    @encrypted_setting ||= SettingActor.create(:name => 'encrypted_setting', :value => @value, :value_type => 'text')
   end
   
   def database_value_for(setting)
     sql = "SELECT value FROM mournful_settings_settings WHERE id = #{setting.id}"
-    Setting.connection.select_value(sql)
+    SettingActor.connection.select_value(sql)
   end
   
   
