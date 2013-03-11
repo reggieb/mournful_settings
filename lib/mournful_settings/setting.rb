@@ -18,9 +18,9 @@ module MournfulSettings
       VALUE_TYPES
     end
     
-    def self.for(name)
+    def self.for(name, default = nil)
       setting = find_by_name(name)
-      setting.value if setting
+      setting ? setting.value : default
     end
 
     def value

@@ -48,6 +48,20 @@ To use a stored setting, use the 'for' class method:
 
     Setting.for(:pi)    -->   3.14159
 
+In this example, Setting.for(:pi) will return nil if there is no Setting
+with a name of 'pi' in the database.
+
+=== Supplying a default
+
+If you wish an alternative value to be returned if no matching setting has been
+defined, you can add a default to the for declaration.
+
+    Setting.for(:pi, 3.14)
+
+This will return 3.14 until a 'pi' setting has been created.
+
+The 
+
 == Encryption
 
 By default mournful settings are encrypted. You can choose not to encrypt a
@@ -118,7 +132,7 @@ So the process would be:
 
 == Integration with ActiveAdmin
 
-Mournful settings contains a ActiveAdmin register file, that allow settings to 
+Mournful settings contains an ActiveAdmin register file, that allows settings to 
 be managed from within the parent app's active_admin space. Of course
 ActiveAdmin needs to be installed and working in the parent rails application,
 for this to work.
@@ -128,6 +142,6 @@ active_admin initializer in your application.
 
     config.load_paths << MournfulSettings.active_admin_load_path
 
-Alternatively, copy lib/active_admin/admin/setting.rb to you app/admin within
+Alternatively, copy lib/active_admin/admin/setting.rb to app/admin within
 the host rails app, and modify it as you desire.
 

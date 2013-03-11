@@ -1,9 +1,13 @@
 module MournfulSettings
-  VERSION = "0.0.5"
+  VERSION = "0.0.6"
 end
 
 # History
 # =======
+# 
+# 0.0.6: Adds default option
+# --------------------------
+# Allows alternative to be set, that will be used until setting defined
 # 
 # 0.0.5: Corrects gem description
 # -------------------------------

@@ -86,6 +86,11 @@ class SettingTest < Test::Unit::TestCase
     assert_nil(Setting.for(:nothing), "Should return nil when setting doesn't exist")
   end
   
+  def test_for_with_default_provided
+    default = 'Something else'
+    assert_equal(default, Setting.for(:nothing, default))
+  end
+  
   def test_setting_an_invalid_cipher_config
     assert_raises RuntimeError do
       Setting::Cipher.config = 'invalid'
@@ -122,7 +127,7 @@ class SettingTest < Test::Unit::TestCase
     assert_equal(key, Setting::Cipher.key)
     test_encrypted_value
   end
-  
+ 
   private
   def text_setting 
     @text_setting ||= Setting.create(:name => 'text_setting', :value => 'foo', :value_type => 'text', :encrypted => false)
