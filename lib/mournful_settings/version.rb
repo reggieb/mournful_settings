@@ -1,9 +1,16 @@
 module MournfulSettings
-  VERSION = "0.0.6"
+  VERSION = "0.1.0"
 end
 
 # History
 # =======
+# 
+# 0.1.0: Acts As Mournful Setting
+# -------------------------------
+# Changes the way Mournful settings are used. Settings can now be defined via
+# an acts_as_mournful_setting declaration rather than inheriting from 
+# MournfulSettings::Setting. Inheritance is still supported 
+# 
 # 
 # 0.0.6: Adds default option
 # --------------------------

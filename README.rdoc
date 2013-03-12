@@ -7,48 +7,54 @@ they can be stored encrypted. Aren't puns wonderful.
 
     gem mournful_settings
 
-Setting are stored in a database table 'mournful_settings_settings'. To add 
-mournful_settings migrations to the host app run this rake task:
-
-    rake mournful_settings:install:migrations
-
-Then run 'rake db:migrate' to create the 'mournful_settings_settings' table
-
 == Usage
 
-In the host rails app, create a class you wish to use as the object to hold
-settings, and have it inherit from MournfulSettings::Setting. For example
-(/app/models/settings.rb)
+    class MySetting < ActiveRecord::Base
 
-    class Setting < MournfulSettings::Setting 
+      acts_as_mournful_setting
+
     end
 
 === Fields
-Each setting has five fields:
 
-[name]         Identifies the setting. Used in 'for' (see below)
+Each setting should have five fields:
 
-[value]        The value being stored.
+[name]         String: Identifies the setting. Used in 'for' (see below)
 
-[value_type]   Values are stored as strings. value_type defines how that string 
-               should be presented. For example, '1.23' with value_type 'number' 
-               will be presented as numeric 1.23. If the value_type was 'text'
-               the value returned would be '1.23'.
+[value]        String: The value being stored.
 
-[description]  Information about the setting being stored
+[value_type]   String: defines how that string should be presented. For example, 
+               '1.23' with value_type 'number' will be presented as numeric 1.23. 
+               If the value_type was 'text' the value returned would be '1.23'.
+
+[description]  String or Text: Information about the setting being stored
 
 [encrypted]    Boolean: If set to true, the value will be stored in an encrypted 
                format. Otherwise the value will be stored as plain text.
+
+See db/migrate/001_create_settings.rb for an example migration.
+
+=== Forcing encryption
+
+If you wish to force all settings to be either encrypted or not, you can 
+overwrite the encrypted? method. For example, if you wanted all settings to
+be encrypted:
+
+    def encrypted?
+      true
+    end
+
+If you use this option, you do not need an encrypted field in the database 
 
 === Retrieving a setting
  
 To use a stored setting, use the 'for' class method:
 
-    Setting.create(:name => 'pi', :value => '3.14159', :value_type => 'number')
+    MySetting.create(:name => 'pi', :value => '3.14159', :value_type => 'number')
 
-    Setting.for(:pi)    -->   3.14159
+    MySetting.for(:pi)    -->   3.14159
 
-In this example, Setting.for(:pi) will return nil if there is no Setting
+In this example, MySetting.for(:pi) will return nil if there is no MySetting
 with a name of 'pi' in the database.
 
 === Supplying a default
@@ -56,7 +62,7 @@ with a name of 'pi' in the database.
 If you wish an alternative value to be returned if no matching setting has been
 defined, you can add a default to the for declaration.
 
-    Setting.for(:pi, 3.14)
+    MySetting.for(:pi, 3.14)
 
 This will return 3.14 until a 'pi' setting has been created.
 
@@ -65,7 +71,7 @@ This will return 3.14 until a 'pi' setting has been created.
 By default mournful settings are encrypted. You can choose not to encrypt a
 setting, by setting :encrypted => false. 
 
-    Setting.create(
+    MySetting.create(
       :name => 'pi', 
       :value => '3.14159', 
       :value_type => 'number',
@@ -78,12 +84,12 @@ Out of the box, encryption uses a blowfish cipher, and a generic key string.
 
 If you wish to use your own encryption key, you can define the key like this:
 
-    MournfulSettings::Setting::Cipher.key = 'your key'
+    MySetting::Cipher.key = 'your key'
 
 Mournful settings uses Ruby's OpenSSL::Cipher. If you wish to change
 the cipher from blowfish, you can alter it like this:
 
-    MournfulSettings::Setting::Cipher.config = 'aes-128-cbc'
+    MySetting::Cipher.config = 'aes-128-cbc'
 
 To see a list of the available options use:
 
@@ -105,7 +111,7 @@ config/application:
         .....
 
         config.before_initialize do
-          MournfulSettings::Setting::Cipher.key = 'your key'
+          MySetting::Cipher.key = 'your key'
         end
       end
     end
@@ -117,9 +123,9 @@ See: http://guides.rubyonrails.org/configuring.html#initialization-events
 If you change the cipher configuration, existing encrypted settings will break.
 Therefore, to make the change after you have started using encrypted settings,
 you must decrypt your settings, make the change and then re-encrypt the settings 
-again. To ease this task, use the Setting.recrypt_all method:
+again. To ease this task, use the MySetting.recrypt_all method:
 
-    Setting.recrypt_all { Setting::Cipher.key = 'your key' }
+    MySetting.recrypt_all { MySetting::Cipher.key = 'your key' }
 
 So the process would be:
 
@@ -128,6 +134,45 @@ So the process would be:
 - Add/Update the configuration code in the app
 - Start the server
 
+== Add functionality by inheritance
+
+The original design for mournful settings relied on the class in the hosting
+app, inheriting its functionality from MournfulSettings::Setting. This 
+functionality is still supported.
+
+For example
+(/app/models/settings.rb)
+
+    class Setting < MournfulSettings::Setting 
+    end
+
+=== Database
+
+When inheriting MournfulSettings::Setting, settings are stored in a database 
+table 'mournful_settings_settings'. This table can be configured via migrations. 
+To add mournful_settings migrations to the host app run this rake task:
+
+    rake mournful_settings:install:migrations
+
+Then run 'rake db:migrate' to create the 'mournful_settings_settings' table.
+
+=== Updating inherited Setting to use acts_as_mournful_setting
+
+The class Setting above could be modified to work with acts_as_mournful_setting,
+like this:
+
+    class Setting < ActiveRecord::Base
+  
+      self.table_name = 'mournful_settings_settings'
+
+      acts_as_mournful_setting
+
+    end
+
+This demonstrates the main advantage of using acts_as_mounful_settings, in that
+you are not restricted as to the table name you wish to use, and it is easier
+to extend the functionality of the setting class.
+
 == Integration with ActiveAdmin
 
 Mournful settings contains an ActiveAdmin register file, that allows settings to 
@@ -135,11 +180,11 @@ be managed from within the parent app's active_admin space. Of course
 ActiveAdmin needs to be installed and working in the parent rails application,
 for this to work.
 
-To use the Mournful settings' ActiveAdmin register files, add this to the 
-active_admin initializer in your application.
+If your host class is Settings, you can use the Mournful settings' ActiveAdmin 
+register files by adding this to the active_admin initializer in your 
+application.
 
     config.load_paths << MournfulSettings.active_admin_load_path
 
-Alternatively, copy lib/active_admin/admin/setting.rb to app/admin within
-the host rails app, and modify it as you desire.
-
+Alternatively, use lib/active_admin/admin/setting.rb as a template for your
+own register file.
