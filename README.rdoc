@@ -44,8 +44,6 @@ be encrypted:
       true
     end
 
-If you use this option, you do not need an encrypted field in the database 
-
 === Retrieving a setting
  
 To use a stored setting, use the 'for' class method:
