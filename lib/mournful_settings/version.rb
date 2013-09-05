@@ -1,9 +1,17 @@
 module MournfulSettings
-  VERSION = "0.1.0"
+  VERSION = "0.1.1"
 end
 
 # History
 # =======
+#
+# 0.1.1: Improves query to find setting via for
+# ---------------------------------------------
+# It makes sense for settings to be identified via a symbol, as this is a label.
+# However, best practice for querying a database is to pass in a string to
+# represent the data being retrieved. So the _for_ method has been altered to
+# convert the setting's name into a string before passing it to ActiveRecord
+# within a query. See: https://github.com/ernie/squeel/issues/67
 # 
 # 0.1.0: Acts As Mournful Setting
 # -------------------------------

@@ -10,7 +10,7 @@ Gem::Specification.new do |s|
   s.homepage    = "https://github.com/reggieb/mournful_settings"
   s.summary     = "Tool for adding encrypted settings to an app."
   s.description = "Adds a settings class to a rails app. The settings are mournful because they can be stored encrypted. Aren’t puns wonderful."
-
+  s.license = 'MIT-LICENSE'
   s.files = Dir["lib/**/*"] + ["MIT-LICENSE", "Rakefile", "README.rdoc"]
   s.test_files = Dir["test/**/*"]
   

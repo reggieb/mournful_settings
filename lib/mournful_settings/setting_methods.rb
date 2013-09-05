@@ -20,7 +20,7 @@ module MournfulSettings
       end
 
       def for(name, default = nil)
-        setting = find_by_name(name)
+        setting = find_by_name(name.to_s)  # values should be passed to AR as strings
         setting ? setting.value : default
       end
       

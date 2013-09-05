@@ -1,3 +1,5 @@
 .rvmrc
+.ruby-*
 test/dummy/db/*.db
 *.gem
+Gemfile.lock
