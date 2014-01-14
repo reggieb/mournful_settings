@@ -5,7 +5,7 @@ they can be stored encrypted. Aren't puns wonderful.
 
 == Installation
 
-    gem mournful_settings
+    gem 'mournful_settings'
 
 == Usage
 
