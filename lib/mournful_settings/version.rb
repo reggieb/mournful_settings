@@ -1,9 +1,14 @@
 module MournfulSettings
-  VERSION = "0.1.1"
+  VERSION = "0.1.2"
 end
 
 # History
 # =======
+#
+# 0.1.2: Add facility to select value type via active_admin form
+# --------------------------------------------------------------
+# Lack of value type was preventing new settings to be created via active admin
+# form.
 #
 # 0.1.1: Improves query to find setting via for
 # ---------------------------------------------
