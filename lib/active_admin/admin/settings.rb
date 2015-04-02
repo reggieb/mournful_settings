@@ -22,7 +22,7 @@ ActiveAdmin.register Setting do
           :checked => (setting.encrypted == false ? false : true)
         }
       )
-      f.input :value_type, collection: MournfulSettings::SettingMethods::VALUE_TYPES
+      f.input :value_type, :collection => MournfulSettings::SettingMethods::VALUE_TYPES
     end
     f.buttons
   end

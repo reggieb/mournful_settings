@@ -1,9 +1,16 @@
 module MournfulSettings
-  VERSION = "0.1.2"
+  VERSION = "0.1.3"
 end
 
 # History
 # =======
+#
+# 0.1.3: Handles lack of database on initial use
+# ----------------------------------------------
+# In a rails app, if a setting is used in an initializer before the settings
+# table is created, the app could not be run to build the table. In this
+# version, it is assumed that if the database is not present, the default
+# setting should be used.
 #
 # 0.1.2: Add facility to select value type via active_admin form
 # --------------------------------------------------------------

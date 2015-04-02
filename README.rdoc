@@ -154,6 +154,12 @@ To add mournful_settings migrations to the host app run this rake task:
 
 Then run 'rake db:migrate' to create the 'mournful_settings_settings' table.
 
+==== Settings before the database is created
+
+If the database table is not present, it will be assumed that the default
+setting (or nil) should be used until the table is created and the matching
+setting stored.
+
 === Updating inherited Setting to use acts_as_mournful_setting
 
 The class Setting above could be modified to work with acts_as_mournful_setting,

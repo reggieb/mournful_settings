@@ -21,7 +21,11 @@ module MournfulSettings
 
       def for(name, default = nil)
         setting = find_by_name(name.to_s)  # values should be passed to AR as strings
+        MournfulSettings.logger.debug "MornfulSetting for #{name} called"
         setting ? setting.value : default
+      rescue ActiveRecord::StatementInvalid => e
+        MournfulSettings.logger.warn "Default MournfulSetting for '#{name}' forced because: #{e.message}"
+        return default
       end
       
       def recrypt_all &do_while_unencrypted
